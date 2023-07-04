@@ -35,7 +35,7 @@ Awesome but never going to happen:
 - Different bonded potentials, e.g. Ryckaert-Bellemans dihedrals
 - Analytics (RDF, distance calculations etc.)
 
-## Concerning symplectic integrators
+### Concerning symplectic integrators
 
 - Ch4. Frenkel & Smit contains description of basic predictor-corrector schemes. 
 - Nice graphical showcase of leapfrog: https://www.physics.drexel.edu/~steve/Courses/Comp_Phys/Integrators/leapfrog/
@@ -51,6 +51,7 @@ https://scicomp.stackexchange.com/questions/29393/md-simulation-reference-for-th
 ### I/O and file formats
 
 - Adhere to GROMACS formats. Coords as .gro/.xtc, topology as .itp/.top and .xvg files for physical property calculations.
+- Read parameters from .mdp file. 
 - By using GROMACS formats, VMD can be simply used to visualize the system. 
 
 ### Units and physical constants
