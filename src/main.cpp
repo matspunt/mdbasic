@@ -1,4 +1,4 @@
-#include "io.hpp"
+#include "atom.hpp"
 #include "system.hpp"
 #include <iostream>
 #include <vector>
@@ -9,10 +9,13 @@ int main() {
     double T_init = 310; // in Kelvin
 
     double atom_overlap_spacing = 0.2; // ensure rel. spacing of 0.2 nm between each atom.
-    std::vector<Molecule> system = init_system(box_size, N_atoms, atom_overlap_spacing, T_init);
+
+    Molecule moleculeObj(0.0, 0.0,0.0);
+    std::vector<Molecule> system = moleculeObj.init_system(box_size, N_atoms, atom_overlap_spacing, T_init);
 
     std::string gro_file = "output.gro";
-    write_coord_vel(system, gro_file, box_size);
+    System systemObj(N_atoms);
+    systemObj.write_coord_vel(system, gro_file, box_size);
 
     std::cout << "Generated coords: " << gro_file << "\n";
 

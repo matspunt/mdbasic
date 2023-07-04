@@ -35,7 +35,7 @@ Awesome but never going to happen:
 - Different bonded potentials, e.g. Ryckaert-Bellemans dihedrals
 - Analytics (RDF, distance calculations etc.)
 
-## Concerning symplectic integrators
+### Concerning symplectic integrators
 
 - Ch4. Frenkel & Smit contains description of basic predictor-corrector schemes. 
 - Nice graphical showcase of leapfrog: https://www.physics.drexel.edu/~steve/Courses/Comp_Phys/Integrators/leapfrog/
@@ -71,6 +71,23 @@ https://math.stackexchange.com/questions/1742524/numerical-force-due-to-lennard-
 
 - Note: do not forget LJ corrections when utilizing cutoff: shift to zero by subtracting value at cut-off (simplest also implemented in GROMACS), or other correction methods (check Rapaport book). 
 
+- For LJ with cutoff, see: http://www.sklogwiki.org/SklogWiki/index.php/Lennard-Jones_model#cite_note-27
+
+### Known bugs
+
+- Something wrong with how threshold overlap is calculated (spawns double 0.00, 0.00, 0.00 coords)
 
 
+
+```
+/*MD elements are mapped to three main objects: Atoms, Molecules and Systems
+
+- Atoms are individual particles, which own information about their coordinates, velocities and accelerations. Atoms 
+    also store their neighbours in a buffered neighbour list. 
+- Molecules are a collection of atoms which are bonded. For LJ fluis, no bonds are yet needed, thus every molecule only owns a
+    single Atom object
+- A System is a collection of Molecules which is initialized, and then subjected to the MD workflow. 
+
+*/
+````
 

@@ -1,29 +1,25 @@
 #ifndef SYSTEM_HPP
 #define SYSTEM_HPP
 
+#include "atom.hpp"
 #include <vector>
 
-// An atom owns Cartesian coordinates, velocities and acceleration information and stores its neighbours in a vector
-
-struct Atom {
-    double x,y,z;
-    double vx, vy, vz;
-    double ax, ay, az;
-    std::vector<Atom*> neighborList;
-};
-
-//A molecule is a self-contained collection of Atoms. In the case of argon, a Molecule contains a single Atom.
-struct Molecule {
+class Molecule {
+public:
+    Molecule(double x, double y, double z);
     std::vector<Atom> atoms;
+    std::vector<Molecule> init_system(const std::vector<double>& box_size, int N_atoms, double thres, double T_init);
+
+private:
 };
 
-//Checks overlaps between atoms upon system building
-bool check_overlap(const Atom& atom1, const Atom& atom2, double thres);
+class System {
+public:
+    System(int numMols);
+    void write_coord_vel(const std::vector<Molecule>& system, const std::string& filename, const std::vector<double>& box_size);
 
-//Draws velocities from M-B distribution
-double gen_velocities(double T_init);
-
-//Sets up system with N atoms, random coordinates and random velocities
-std::vector<Molecule> init_system(const std::vector<double>& box_size, int N_atoms, double thres, double T_init);
+private:
+    std::vector<Molecule> molecules;
+};
 
 #endif

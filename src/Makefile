@@ -1,21 +1,22 @@
-CC = g++
-CFLAGS = -std=c++11
+CXX = g++
+CXXFLAGS = -Wall -Wextra -O2
+LDFLAGS =
 
-OBJ_FILES = io.o main.o system.o
+SRCS = atom.cpp main.cpp system.cpp
+OBJS = $(SRCS:.cpp=.o)
+DEPS = atom.hpp system.hpp
 
-all: main
+TARGET = md
 
-main: $(OBJ_FILES)
-	$(CC) $(CFLAGS) $^ -o $@
+.PHONY: all clean
 
-io.o: io.cpp io.hpp
-	$(CC) $(CFLAGS) -c $< -o $@
+all: $(TARGET)
 
-main.o: main.cpp io.hpp system.hpp
-	$(CC) $(CFLAGS) -c $< -o $@
+$(TARGET): $(OBJS)
+	$(CXX) $(LDFLAGS) $(OBJS) -o $@
 
-system.o: system.cpp system.hpp
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o: %.cpp $(DEPS)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ_FILES)
+	rm -f $(OBJS)
