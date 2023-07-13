@@ -6,9 +6,9 @@
 
 class Molecule {
 public:
-    Molecule(double x, double y, double z);
+    Molecule(double x, double y, double z, double vx, double vy, double vz);
     std::vector<Atom> atoms;
-    std::vector<Molecule> init_system(const std::vector<double>& box_size, int N_atoms, double thres, double T_init);
+    static std::vector<Molecule> init_system(const std::vector<double>& box_size, int N_atoms, double thres, double T_init);
 
 private:
 };
@@ -16,7 +16,7 @@ private:
 class System {
 public:
     System(int numMols);
-    void write_coord_vel(const std::vector<Molecule>& system, const std::string& filename, const std::vector<double>& box_size);
+    static void write_coord_vel(const std::vector<Molecule>& system, const std::string& filename, const std::vector<double>& box_size);
 
 private:
     std::vector<Molecule> molecules;

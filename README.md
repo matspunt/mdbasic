@@ -40,24 +40,11 @@ Awesome but never going to happen:
 - Ch4. Frenkel & Smit contains description of basic predictor-corrector schemes. 
 - Nice graphical showcase of leapfrog: https://www.physics.drexel.edu/~steve/Courses/Comp_Phys/Integrators/leapfrog/
 
-### Concerning neighbour lists
-
-Overview of neighbour lists and cell lists (also, there is basic pseudocode in the book by Frenkel & Smit):
-
-https://en.wikipedia.org/wiki/Cell_lists
-
-https://scicomp.stackexchange.com/questions/29393/md-simulation-reference-for-the-neighbors-list-method
 
 ### I/O and file formats
 
 - Adhere to GROMACS formats. Coords as .gro/.xtc, topology as .itp/.top and .xvg files for physical property calculations.
 - By using GROMACS formats, VMD can be simply used to visualize the system. 
-
-### Units and physical constants
-
-- For units, adhere to GROMACS: https://manual.gromacs.org/documentation/2023/reference-manual/definitions.html
-- The Boltzmann constant is defined as 0.0083144621 $kJ mol^{-1} K^{-1}$
-- 1 amu = 1.6606538 * 10^-27 kg
 
 ### LJ parameters and argon
 
@@ -73,11 +60,15 @@ https://math.stackexchange.com/questions/1742524/numerical-force-due-to-lennard-
 
 - For LJ with cutoff, see: http://www.sklogwiki.org/SklogWiki/index.php/Lennard-Jones_model#cite_note-27
 
+- In addition, take $F_{AB} = - F_{BA}$ into account. 
+
+### Parallelization
+
+Keep Array of Structure etc. paradigm in mind: https://en.wikipedia.org/wiki/AoS_and_SoA
+
 ### Known bugs
 
-- Something wrong with how threshold overlap is calculated (spawns double 0.00, 0.00, 0.00 coords)
-
-
+- Something wrong with how threshold overlap is calculated (spawns double 0.00, 0.00, 0.00 coords) --> because we create atom and molecule objects...
 
 ```
 /*MD elements are mapped to three main objects: Atoms, Molecules and Systems

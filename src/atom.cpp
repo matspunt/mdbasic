@@ -1,7 +1,7 @@
 #include "atom.hpp"
 
-Atom::Atom(double x, double y, double z)
-    : x(x), y(y), z(z), vx(0.0), vy(0.0), vz(0.0), ax(0.0), ay(0.0), az(0.0) {
+Atom::Atom(double x, double y, double z, double vx, double vy, double vz)
+    : x(x), y(y), z(z), vx(vx), vy(vy), vz(vz), ax(0.0), ay(0.0), az(0.0) {
 }
 
 /**
@@ -14,7 +14,7 @@ double Atom::gen_velocities(double T_init) {
 
     const double kB = 0.0083144621; // kJ mol^-1 K^-1
 
-    // We can represent M-B as a gamma distribution, with k_shape = 3/2 and θ_scale = kB*T
+    // We can represent M-B as a gamma distribution, with alpha (shape) = 3/2 and beta (scale) = kB*T
     std::gamma_distribution<double> maxboltz(3.0 / 2.0, (kB * T_init));
 
     return maxboltz(generator);

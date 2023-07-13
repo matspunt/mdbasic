@@ -4,15 +4,10 @@
 #include <iomanip>
 
 //A molecule is simply a collection of atoms, with its information public
-Molecule::Molecule(double x, double y, double z) : atoms({Atom(x, y, z)}) {
+Molecule::Molecule(double x, double y, double z, double vx, double vy, double vz) : atoms({Atom(x, y, z, vx, vy, vz)}) {
 }
 
-//The system object is initialized by the 'Molecules::init_system' function
 System::System(int numMols) {
-    molecules.reserve(numMols);
-    for (int i = 0; i < numMols; ++i) {
-        molecules.emplace_back(0.0, 0.0, 0.0);
-    }
 }
 
 /**
@@ -27,63 +22,50 @@ System::System(int numMols) {
 std::vector<Molecule> Molecule::init_system(const std::vector<double>& box_size, int N_atoms, double thres, double T_init) {
     std::random_device rd;
     std::mt19937 gen(rd());
-    
-    Atom atom(0.0, 0.0, 0.0); //init object to access member functions
 
-    //Draw random coordinates inside of the defined box
     std::uniform_real_distribution<double> dis_x(0.0, box_size[0]);
     std::uniform_real_distribution<double> dis_y(0.0, box_size[1]);
     std::uniform_real_distribution<double> dis_z(0.0, box_size[2]);
 
-    //Obtain the full number of M-B velocities to be allocated to the atoms later
     std::vector<double> velocities(3 * N_atoms);
     for (unsigned int i = 0; i < velocities.size(); ++i) {
-        velocities[i] = atom.gen_velocities(T_init);
+        velocities[i] = Atom::gen_velocities(T_init);
     }
 
     std::vector<Molecule> system;
 
     for (int i = 0; i < N_atoms; i++) {
-        
-        Molecule molecule(0.0, 0.0, 0.0); //init a molecule object
-        // For LJ only systems, set j < 1
-        for (int j = 0; j < 1; j++) {
+        Atom atom(dis_x(gen), dis_y(gen), dis_z(gen), 0.0, 0.0, 0.0); //initialize with empty velocities
 
-            atom.x = dis_x(gen);
-            atom.y = dis_y(gen);
-            atom.z = dis_z(gen);
-
-            // In the following logic, we assess any (partial) overlaps between generated atom coordinates
-            // based on Euclidean distance, if within threshold, lower the Atom index by one
-            bool overlap = false;
-            for (const auto& molcoord : system) {
-                for (const auto& atomcoord : molcoord.atoms) {
-                    if (atom.euclidean_dist(atom, atomcoord, thres)) {
-                        overlap = true;
-                        break;
-                    }
-                }
-                if (overlap) {
+        bool overlap = false;
+        for (const auto& molcoord : system) {
+            for (const auto& atomcoord : molcoord.atoms) {
+                if (Atom::euclidean_dist(atomcoord, atom, thres)) {
+                    overlap = true;
                     break;
                 }
             }
-
             if (overlap) {
-                j--;
-                continue;
+                break;
             }
-
-            atom.vx = velocities[i];
-            atom.vy = velocities[3 * i + 1]; //shift the indices to prevent duplicate vels being drawn
-            atom.vz = velocities[3 * i + 2];
-
-            molecule.atoms.push_back(atom);
         }
+
+        if (overlap) {
+            i--;
+            continue;
+        }
+
+        atom.vx = velocities[i];
+        atom.vy = velocities[3 * i + 1];
+        atom.vz = velocities[3 * i + 2];
+
+        Molecule molecule(atom.x, atom.y, atom.z, atom.vx, atom.vy, atom.vz);
         system.push_back(molecule);
     }
 
     return system;
 }
+
 
 /**
  * Writes the coordinates and velocities of a system to a file in GRO format 
